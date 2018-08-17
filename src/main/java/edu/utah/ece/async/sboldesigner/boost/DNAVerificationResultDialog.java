@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.utah.ece.async.sboldesigner.sbol.editor.dialog.DialogUtils;
+import gov.doe.jgi.boost.resopnseparser.DNAVerificationResponseParser;
 
 public class DNAVerificationResultDialog extends JDialog implements ActionListener {
 	
@@ -37,7 +38,9 @@ public class DNAVerificationResultDialog extends JDialog implements ActionListen
 		super(JOptionPane.getFrameForComponent(parent), "DNA Verification Violations", true);
 		this.parent = parent;
 		
-		if(jobReport.length() == 0) {
+		
+		JSONObject sequenceViolation = new DNAVerificationResponseParser(jobReport).constraintsViolations();
+		if(sequenceViolation.length() == 0) {
 			String noViolationMsg = "This design sequence does not have any violation for the selected Vendor";
 			JOptionPane.showMessageDialog(parent, noViolationMsg);
 			

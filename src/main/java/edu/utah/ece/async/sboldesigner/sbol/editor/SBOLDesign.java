@@ -112,6 +112,7 @@ import edu.utah.ece.async.sboldesigner.boost.AvailableOperationsDialog;
 import edu.utah.ece.async.sboldesigner.boost.BOOSTLoginDialog;
 import edu.utah.ece.async.sboldesigner.boost.BOOSTOperations;
 import edu.utah.ece.async.sboldesigner.boost.BOOSTPreferences;
+import edu.utah.ece.async.sboldesigner.boost.CodonPolishingResultDialog;
 import edu.utah.ece.async.sboldesigner.boost.DNAVerificationResultDialog;
 import edu.utah.ece.async.sboldesigner.sbol.editor.dialog.ComponentDefinitionBox;
 import edu.utah.ece.async.sboldesigner.sbol.editor.dialog.MessageDialog;
@@ -130,6 +131,7 @@ import edu.utah.ece.async.sboldesigner.sbol.editor.event.PartVisibilityChangedEv
 import edu.utah.ece.async.sboldesigner.sbol.editor.event.SelectionChangedEvent;
 import gov.doe.jgi.boost.client.constants.BOOSTConstants;
 import gov.doe.jgi.boost.client.utils.DocumentConversionUtils;
+import gov.doe.jgi.boost.resopnseparser.CDSPolisingResponseParser;
 import gov.doe.jgi.boost.resopnseparser.CodonJugglerResponserParser;
 import gov.doe.jgi.boost.resopnseparser.DNAVerificationResponseParser;
 
@@ -1457,14 +1459,15 @@ public class SBOLDesign {
 			case BOOSTConstants.DNA_VERIFICATION:
 				if (jobUUID != null) {
 					JSONObject jobReport =  BOOSTOperations.checkJobReport(jobUUID);
-					JSONObject sequenceViolation = new DNAVerificationResponseParser(jobReport).constraintsViolations();
-					System.out.println(sequenceViolation.toString());
-					new DNAVerificationResultDialog(panel, sequenceViolation);
+					new DNAVerificationResultDialog(panel, jobReport);
 				}
 				break;
 				
 			case BOOSTConstants.CODON_POLISHING:
-				// TODO : handle
+				if(jobUUID != null) {
+					JSONObject jobReport = BOOSTOperations.checkJobReport(jobUUID);
+					new CodonPolishingResultDialog(panel, jobReport);
+				}
 				break;
 				
 			case BOOSTConstants.DNA_PARTITION:
